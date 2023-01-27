@@ -1,0 +1,56 @@
+﻿@model IndexViewModel
+
+@{
+
+    ViewBag.Title = "ТОВАРЫ";
+}
+<div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <section class="panel">
+                    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6">
+                        Категории
+                    </div>
+                    <div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var empl in Model.ProductTypes)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <a asp-controller="Home" asp-action="Sort" asp-route-id="@empl.Id">@empl.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </section>
+            </div>
+            <div class="col-9">
+                <div class="row product-list">
+                    @foreach (var empl in Model.Products)
+                    {
+                        var photoPath = "~/images/" + (empl.PisturePath ?? "noimage.jpg");
+                        <div class="col-md-4">
+                            <section class="panel">
+                                <div class="pro-img-box">
+                                    <img src="@photoPath" asp-append-version="true"
+                                         width="250" height="250" class="rounded-circle" />
+                                </div>
+                                <div class="panel-body text-center">
+                                    <h4>
+                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@empl.Id" class="pro-title">
+                                            @empl.Name
+                                        </a>
+                                    </h4>
+                                    <p class="price">@empl.Coast руб.</p>
+                                </div>
+                            </section>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

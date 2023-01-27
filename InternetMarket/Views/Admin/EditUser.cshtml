@@ -1,0 +1,59 @@
+﻿@model EditUserViewModel
+@{ 
+    ViewBag.Title = "ИЗМЕНИТЬ ПОЛЬЗОВАТЕЛЯ";
+}
+<h1>Изменить данные о пользователе</h1>
+<form method="post" class="mt-3">
+    <div class="form-group row">
+        <label asp-for="Id" class="col-sm-2 col-form-label">Номер пользователя</label>
+        <div class="col-sm-10">
+            <input asp-for="Id" disabled class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Email" class="col-sm-2 col-form-label">Электронная почта:</label>
+        <div class="col-sm-10">
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="UserName" class="col-sm-2 col-form-label">Имя:</label>
+        <div class="col-sm-10">
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+    </div>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group row">
+        <div class="col-sm-10">            
+                <button type="submit" class="btn btn-primary">Изменить</button>
+                <a asp-action="ListUsers" class="btn btn-primary">Закрыть</a>
+           
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            Роли пользователя
+        </div>
+        <div class="card-body">
+            @if (Model.Roles.Any())
+            {
+                foreach (var role in Model.Roles)
+                {
+                    <h5 class="card-title">@role</h5>
+                }
+            }
+            else
+            {
+                <h5 class="card-title">В данный момент нет никакой роли</h5>
+
+            }
+        </div>
+        <div class="card-footer">
+            <a asp-action="ManageUserRoles" asp-route-Id="@Model.Id"
+               style="width:auto" class="btn btn-primary">Измениить роли пользователя</a>
+        </div>
+    </div>
+  
+</form>

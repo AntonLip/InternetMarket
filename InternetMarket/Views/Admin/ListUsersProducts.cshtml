@@ -1,0 +1,43 @@
+﻿@model UsersProductsViewModel
+@{
+    ViewBag.Title = "ПОЛЬЗОВАТЕЛИ";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            Номер пользователя: @Model.UserId
+        </div>
+        <div class="col">
+            <h5 class="card-title">Имя пользователя: @Model.UserName</h5>
+        </div>
+    </div>
+    @foreach (var item in Model.Products)
+    {
+
+        <div class="row">
+            <div class="col">
+                @item.ProductName
+            </div>
+            <div class="col">
+                @item.Count
+            </div>
+            <div class="col">
+                @item.Cost
+            </div>
+            <div class="col">
+                @item.BuyDate
+            </div>
+        </div>
+
+    }
+    <div class="row">
+        <div class="col">Total</div>
+        <div class="col">@Model.TotalCost</div>
+        <div class="col">
+            <form method="post" asp-action="GetReport" asp-route-id="@Model.UserId">
+                <button type="submit" class="btn btn-danger">Скачать отчет</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "ERROR";
+}
+
+    
+@if (ViewBag.Title == null)
+{
+    <h1 class="text-danger">Something gone wrong!</h1>
+    <a asp-controller="Home" asp-action="Index">
+        Click here to navigate to home page
+    </a>
+}
+else 
+{
+<h1 class="text-danger">@ViewBag.ErrorTitle</h1>
+<h6 class="text-danger">@ViewBag.ErrorMessage</h6>
+}

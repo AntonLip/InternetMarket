@@ -1,0 +1,65 @@
+﻿@model ProductDetailsViewModel
+@inject SignInManager<ApplicationUser> signInManager;
+@{
+    ViewBag.Title = "О продукте";
+    var photoPath = "~/images/" + (Model.Product.PisturePath ?? "noimage.png");
+}
+
+
+<div class=" row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card-header">
+            <h1 class="text-center">@Model.Product.Name</h1>
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+            {
+                <div >
+                    <form asp-action="DeleteProduct" asp-controller="Home" asp-route-id="@Model.Product.Id" method="post">
+                        <a class="btn btn-primary" asp-action="UpdateProduct" , asp-controller="Home" asp-route-Id="@Model.Product.Id">Изменить</a>
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </div>
+            }
+        </div>
+        <div class="card-body text-left">
+            @if (Model.Product.PisturePath is null)
+            {
+                <img class="card-img-top" height="200" src="@photoPath" asp-append-version="true" />
+            }
+            else
+            {
+                <img class="card-img-top" src="@photoPath" asp-append-version="true" />
+            }
+            <h4>Артикул : @Model.Product.ArticleNumber</h4>
+            <h4>Название : @Model.Product.Name</h4>
+            <h4>Количество : @Model.Product.Count</h4>
+            <h4>Стоимость : @Model.Product.Coast руб.</h4>
+            <h4>Описание : @Model.Product.Description</h4>
+        </div>
+        <div class="container">
+            <div class="row">
+                @if (signInManager.IsSignedIn(User))
+                {
+                    <div class="card-footer">
+                        <form asp-controller="Home" asp-action="BuyProduct" method="post" class="col">
+                            <div class="col-sm-10">
+                                <input asp-for="CountChosen" class="form-control" placeholder="CountChosen" />
+                            </div>
+                            <div class="col-sm-10" hidden="hidden">
+                                <input asp-for="Product.Id" class="form-control" placeholder="CountChosen" value=@Model.Product.Id />
+                            </div>
+                            <div class="col-sm-10" hidden="hidden">
+                                <input asp-for="Product.Coast" class="form-control" placeholder="CountChosen" value=@Model.Product.Coast />
+                            </div>
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">В корзину</button>
+                            </div>
+                        </form>
+                    </div>
+                }
+                <div class="col">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Назад</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

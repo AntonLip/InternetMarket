@@ -1,0 +1,62 @@
+﻿@model IEnumerable<InternetMarket.Models.DbModels.Product>
+@inject SignInManager<ApplicationUser> signInManager;
+
+@{
+    ViewData["Title"] = "Результат поиска";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Внешний вид
+            </th>
+            <th>
+                Название
+            </th>
+            <th>
+                Артикул
+            </th>
+            <th>
+                Количество
+            </th>
+            <th>
+                Стоимость, рублей
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var photoPath = "~/images/" + (item.PisturePath ?? "noimage.png");
+
+            <tr>
+                <td>
+                    <img class="card-img-top" width="40" height="40" src="@photoPath" asp-append-version="true" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArticleNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Coast)
+                </td>
+                <td>
+                    @Html.ActionLink("Подробнее", "Details", new { id = item.Id })
+                    @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("  Изменить", "UpdateProduct", new { id = item.Id }) 
+
+                        @Html.ActionLink("  Удалить", "DeleteProduct", new { id = item.Id })
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

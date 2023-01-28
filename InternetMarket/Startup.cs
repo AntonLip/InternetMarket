@@ -2,6 +2,8 @@ using Contributors.DataAccess;
 using Contributors.Interfaces.Repository;
 using InternetMarket.DataAccess;
 using InternetMarket.Interfaces.IService;
+using InternetMarket.Interfaces.Repository;
+using InternetMarket.Models;
 using InternetMarket.Models.DbModels;
 using InternetMarket.Services;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +27,7 @@ namespace InternetMarket
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.Configure<DbSettings>(Configuration.GetSection(nameof(DbSettings)));
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 10;
@@ -34,10 +37,12 @@ namespace InternetMarket
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
             services.AddTransient<IProductTypeService, ProductTypeService>();
+            services.AddTransient<IConnectionParamsService, ConnectionParamsService>();
 
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
             services.AddTransient<IProductTypeRepository, ProductTypeRepository>();
+            services.AddTransient<IConnectionParamsRepository, ConnectionParamsRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

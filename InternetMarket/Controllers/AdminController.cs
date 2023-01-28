@@ -17,7 +17,7 @@ namespace InternetMarket.Controllers
     public class AdminController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManagerQ;
-        private readonly UserManager<ApplicationUser> userManagerQ;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IProductService _productService;
         private readonly IShoppingCartService _shoppingCartService;
         public AdminController(RoleManager<IdentityRole> roleManager, IShoppingCartService shoppingCartService,
@@ -26,13 +26,13 @@ namespace InternetMarket.Controllers
             _productService = productService;
             _shoppingCartService = shoppingCartService;
             _roleManagerQ = roleManager;
-            userManagerQ = userManager;
+            this._userManager = userManager;
         }
         
         [HttpGet]
         public IActionResult ListUsers()
         {            
-            var users = userManagerQ.Users;
+            var users = _userManager.Users;
             return View(users);
         }
         [HttpGet]
@@ -72,22 +72,22 @@ namespace InternetMarket.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditRoles(string Id)
+        public async Task<IActionResult> EditRoles(string id)
         {
-            var role = await _roleManagerQ.FindByIdAsync(Id);
+            var role = await _roleManagerQ.FindByIdAsync(id);
             if (role == null)
             {
-                ViewBag.ErrorMessage = $" Role with Id = {Id} don't exist";
-                return View("NotFound");
+                ViewBag.ErrorMessage = $" Role with Id = {id} don't exist";
+                return View("Error");
             }
             var model = new EditRoleViewModel
             {
                 Id = role.Id,
                 RoleName = role.Name
             };
-            foreach (var user in userManagerQ.Users.ToList())
+            foreach (var user in _userManager.Users.ToList())
             {
-                if (await userManagerQ.IsInRoleAsync(user, role.Name))
+                if (await _userManager.IsInRoleAsync(user, role.Name))
                 {
                     model.Users.Add(user.UserName);
                 }
@@ -102,7 +102,7 @@ namespace InternetMarket.Controllers
             if (role == null)
             {
                 ViewBag.ErrorMessage = $" Role with Id = {viewModel.Id.ToString()} don't exist";
-                return View("NotFound");
+                return View("Error");
             }
             else
             {
@@ -134,18 +134,18 @@ namespace InternetMarket.Controllers
             if (role == null)
             {
                 ViewBag.ErrorMessage = $" Role with Id = {roleId} don't exist";
-                return View("NotFound");
+                return View("Error");
             }
             else
             {
-                foreach (var user in userManagerQ.Users.ToList())
+                foreach (var user in _userManager.Users.ToList())
                 {
                     var userRoleViewModel = new UserRoleViewModel
                     {
                         UserId = user.Id,
                         UserName = user.UserName
                     };
-                    if (await userManagerQ.IsInRoleAsync(user, role.Name))
+                    if (await _userManager.IsInRoleAsync(user, role.Name))
                     {
                         userRoleViewModel.IsSelected = true;
                     }
@@ -165,22 +165,22 @@ namespace InternetMarket.Controllers
             if (role == null)
             {
                 ViewBag.ErrorMessage = $"Role with id = {roleId} don't exist";
-                return View("NotFound");
+                return View("Error");
             }
             else
             {
                 for (int i = 0; i < model.Count; i++)
                 {
-                    var user = await userManagerQ.FindByIdAsync(model[i].UserId);
+                    var user = await _userManager.FindByIdAsync(model[i].UserId);
 
                     IdentityResult result = null;
-                    if (model[i].IsSelected && !(await userManagerQ.IsInRoleAsync(user, role.Name)))
+                    if (model[i].IsSelected && !(await _userManager.IsInRoleAsync(user, role.Name)))
                     {
-                        result = await userManagerQ.AddToRoleAsync(user, role.Name);
+                        result = await _userManager.AddToRoleAsync(user, role.Name);
                     }
-                    else if (!model[i].IsSelected && (await userManagerQ.IsInRoleAsync(user, role.Name)))
+                    else if (!model[i].IsSelected && (await _userManager.IsInRoleAsync(user, role.Name)))
                     {
-                        result = await userManagerQ.RemoveFromRoleAsync(user, role.Name);
+                        result = await _userManager.RemoveFromRoleAsync(user, role.Name);
                     }
                     else
                     {
@@ -199,16 +199,16 @@ namespace InternetMarket.Controllers
         }
         [HttpGet]
 
-        public async Task<IActionResult> EditUser(string Id)
+        public async Task<IActionResult> EditUser(string id)
         {
-            var user = await userManagerQ.FindByIdAsync(Id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                ViewBag.ErrorMessage = $"User with Id = {Id} not fount";
-                return View("NotFound");
+                ViewBag.ErrorMessage = $"User with Id = {id} not fount";
+                return View("Error");
             }
-            var userRoles = await userManagerQ.GetRolesAsync(user);
-            var userClaims = await userManagerQ.GetClaimsAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var userClaims = await _userManager.GetClaimsAsync(user);
             var model = new EditUserViewModel
             {
                 Id = user.Id,
@@ -222,18 +222,18 @@ namespace InternetMarket.Controllers
         [HttpPost]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
-            var user = await userManagerQ.FindByIdAsync(model.Id);
+            var user = await _userManager.FindByIdAsync(model.Id);
             if (user == null)
             {
                 ViewBag.ErrorMessage = $"User with Id = {model.Id} not fount";
-                return View("NotFound");
+                return View("Error");
             }
             else
             {
                 user.UserName = model.UserName;
                 user.Email = model.Email;
 
-                var result = await userManagerQ.UpdateAsync(user);
+                var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("ListUsers");
@@ -248,17 +248,17 @@ namespace InternetMarket.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> DeleteUser(string Id)
+        public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = await userManagerQ.FindByIdAsync(Id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                ViewBag.ErrorMessage = $"User with Id = {Id} not fount";
-                return View("Error/NotFound");
+                ViewBag.ErrorMessage = $"User with Id = {id} not fount";
+                return View("Error");
             }
             else
             {
-                var result = await userManagerQ.DeleteAsync(user);
+                var result = await _userManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("ListUsers");
@@ -272,13 +272,13 @@ namespace InternetMarket.Controllers
 
         }
         [HttpGet]
-        public async Task<IActionResult> ManageUserRoles(string Id)
+        public async Task<IActionResult> ManageUserRoles(string id)
         {
-            var user = await userManagerQ.FindByIdAsync(Id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                ViewBag.ErrorMessage = $"user with Id = {Id} not fount";
-                return View("Error/NotFound");
+                ViewBag.ErrorMessage = $"user with Id = {id} not fount";
+                return View("Error");
             }
             var model = new List<EditRolesInUser>();
             foreach (var role in _roleManagerQ.Roles)
@@ -293,38 +293,38 @@ namespace InternetMarket.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> ManageUserRoles(List<EditRolesInUser> editRolesInUsers, string Id)
+        public async Task<IActionResult> ManageUserRoles(List<EditRolesInUser> editRolesInUsers, string id)
         {
-            var user = await userManagerQ.FindByIdAsync(Id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                ViewBag.ErrorMessage = $"user with Id = {Id} not fount";
-                return View("Error/NotFound");
+                ViewBag.ErrorMessage = $"user with Id = {id} not fount";
+                return View("Error");
             }
-            var role = await userManagerQ.GetRolesAsync(user);
-            var result = await userManagerQ.RemoveFromRolesAsync(user, role);
+            var role = await _userManager.GetRolesAsync(user);
+            var result = await _userManager.RemoveFromRolesAsync(user, role);
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot remove roles");
                 return View(editRolesInUsers);
             }
-            result = await userManagerQ.AddToRolesAsync(user, editRolesInUsers.Where(x => x.IsSelected).Select(y => y.RoleName));
+            result = await _userManager.AddToRolesAsync(user, editRolesInUsers.Where(x => x.IsSelected).Select(y => y.RoleName));
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot add roles");
                 return View(editRolesInUsers);
             }
-            return RedirectToAction("EditUser", new { Id = Id });
+            return RedirectToAction("EditUser", new { Id = id });
 
         }
 
-        public async Task<IActionResult> DeleteRole(string Id)
+        public async Task<IActionResult> DeleteRole(string id)
         {
-            var role = await _roleManagerQ.FindByIdAsync(Id);
+            var role = await _roleManagerQ.FindByIdAsync(id);
             if (role == null)
             {
-                ViewBag.ErrorMessage = $"Role with Id = {Id} not fount";
-                return View("Error/NotFound");
+                ViewBag.ErrorMessage = $"Role with Id = {id} not fount";
+                return View("Error");
             }
             else
             {
@@ -356,7 +356,7 @@ namespace InternetMarket.Controllers
         {            
             try
             {
-                var user = await userManagerQ.FindByIdAsync(id);
+                var user = await _userManager.FindByIdAsync(id);
                 var shpcart = _shoppingCartService.GetUserShoppingCarts(user.Id, true);
                 if (shpcart is null)
                     return NotFound();
@@ -390,16 +390,16 @@ namespace InternetMarket.Controllers
                     Messge = ex.Message
                 };
 
-                return RedirectToAction("MyError", errorViewModel);
+                return RedirectToAction("Error", "Home", errorViewModel);
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetReportAsync(string Id)
+        public async Task<IActionResult> GetReportAsync(string id)
         {          
 
             try
             {
-                var user = await userManagerQ.FindByIdAsync(Id);
+                var user = await _userManager.FindByIdAsync(id);
                 var shpcart = _shoppingCartService.GetUserShoppingCarts(user.Id, true);
                 if (shpcart is null)
                     return NotFound();
@@ -438,7 +438,7 @@ namespace InternetMarket.Controllers
                     Messge = ex.Message
                 };
 
-                return RedirectToAction("MyError", errorViewModel);
+                return RedirectToAction("Error", "Home", errorViewModel);
             }
         }
         [HttpGet]

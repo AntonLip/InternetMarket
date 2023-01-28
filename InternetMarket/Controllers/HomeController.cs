@@ -421,15 +421,15 @@ namespace InternetMarket.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Details(Guid Id)
+        public IActionResult Details(Guid id)
         {
             try
             {
-                var product = _productService.GetById(Id);
+                var product = _productService.GetById(id);
                 if (product == null)
                 {
                     Response.StatusCode = 404;
-                    return View("EmployeeNotFound", Id);
+                    return View("Error");
                 }
                 ProductDetailsViewModel model = new ProductDetailsViewModel()
                 {

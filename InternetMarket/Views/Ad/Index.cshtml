@@ -1,3 +1,68 @@
-<h1>
-    Привет мир
-</h1>
+@model IEnumerable<InternetMarket.Models.DbModels.ConnectionParams>
+
+@{
+    ViewData["Title"] = "Подключения";
+}
+
+<h1 class="text-center">Список запросов к серверу</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            IP
+        </th>
+        <th>
+            Port
+        </th>
+        <th>
+            User Agent
+        </th>
+        <th>
+            ConnectionTime
+        </th>
+        <th>
+            IsBot
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.RemoteIpAddr
+            </td>
+            <td>
+                @item.RemotePort
+            </td>
+            <td>
+                @item.UserAgent
+            </td>
+            <td>
+                @item.ConnectionTime.ToString()
+            </td>
+
+            @if (item.IsBot)
+            {
+                <td>
+                    yes
+                </td>
+            }
+            else
+            {
+                <td>
+                    no
+                </td>
+            }
+
+
+            <td>
+                @* @Html.ActionLink("Изменить", "EditProductType", new { id = item.Id }) | *@
+                @Html.ActionLink("Удалить", "Remove", new { id = item.Id })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

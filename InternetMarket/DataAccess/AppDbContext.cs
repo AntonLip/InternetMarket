@@ -5,19 +5,25 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Net;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace InternetMarket.DataAccess
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
+        private static DbSettings _dbSettings;
+        public AppDbContext(DbContextOptions<AppDbContext> options, IOptions<DbSettings> settings)
             : base(options)
         {
+            _dbSettings = settings.Value;
             Database.EnsureCreated();
         }
         public DbSet<Product> Products{ get; set; }
         public DbSet<ProductType> ProductTypes{ get; set; }
         public DbSet<ShoppingCart> ShoppingCart { get; set; }
+        public DbSet<ConnectionParams> ConnectionParams { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql(
@@ -32,12 +38,8 @@ namespace InternetMarket.DataAccess
         }
         private static string GetConnectionString()
         {
-            using (StreamReader r = new StreamReader("appsettings.json"))
-            {
-                string json = r.ReadToEnd();
-                var dbSettings = JsonConvert.DeserializeObject<DbSettings>(json);
-                return $"server={dbSettings.DbServer};user={dbSettings.DbUser};password={dbSettings.DbPassword};database={dbSettings.Database};";
-             }
+            var conn  = $"server={_dbSettings.DbServer};user={_dbSettings.DbUser};password={_dbSettings.DbPassword};database={_dbSettings.Database};";
+            return conn;
         }
     }
 }

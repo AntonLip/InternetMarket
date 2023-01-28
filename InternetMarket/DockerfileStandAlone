@@ -16,11 +16,5 @@ RUN dotnet publish "InternetMarket.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-ARG DB_SERVER
-ENV ENV_DB_SERVER=$DB_SERVER
-ARG DB_USER
-ENV ENV_DB_USER=$DB_USER
-ARG DB_PASSWORD
-ENV ENV_DB_PASSWORD=$DB_PASSWORD
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "InternetMarket.dll"]

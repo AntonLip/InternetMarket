@@ -17,7 +17,7 @@ namespace InternetMarket.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("ProductTypeList");
         }
         public IActionResult ProductTypeList()
         {
@@ -50,20 +50,20 @@ namespace InternetMarket.Controllers
                         RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
                         Messge = ex.Message
                     };
-                    return RedirectToAction("MyError", errorViewModel);
+                    return RedirectToAction("Error", "Home", errorViewModel);
                 }
             }
             return BadRequest();
         }
 
         [HttpGet]
-        public IActionResult EditProductType(Guid Id)
+        public IActionResult EditProductType(Guid id)
         {
-            var productType = _productTypeService.GetById(Id);
+            var productType = _productTypeService.GetById(id);
             if (productType is null)
             {
-                ViewBag.ErrorMessage = $" Role with Id = {Id} don't exist";
-                return View("NotFound");
+                ViewBag.ErrorMessage = $" Role with Id = {id} don't exist";
+                return View("Error");
             }
             var model = new EditProductTypeViewModel
             {
@@ -80,7 +80,7 @@ namespace InternetMarket.Controllers
             if (productType is null)
             {
                 ViewBag.ErrorMessage = $" Role with Id = {model.Id.ToString()} don't exist";
-                return View("NotFound");
+                return View("Error");
             }
             else
             {
@@ -97,7 +97,7 @@ namespace InternetMarket.Controllers
                         RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
                         Messge = ex.Message
                     };
-                    return RedirectToAction("MyError", errorViewModel);
+                    return RedirectToAction("Error", "Home", errorViewModel);
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace InternetMarket.Controllers
             if (productType is null)
             {
                 ViewBag.ErrorMessage = $" Role with Id = {id} don't exist";
-                return View("NotFound");
+                return View("Error");
             }
             try
             {
@@ -123,7 +123,7 @@ namespace InternetMarket.Controllers
                     RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
                     Messge = ex.Message
                 };
-                return RedirectToAction("MyError", errorViewModel);
+                return RedirectToAction("Error","Home", errorViewModel);
             }
         }
     }

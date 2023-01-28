@@ -16,7 +16,7 @@ namespace InternetMarket.Services
             _repository = repository;
         }
 
-        public TModel Add(TModel model)
+        public virtual TModel Add(TModel model)
         {
             if (model is null)
                 throw new ArgumentNullException();

@@ -33,6 +33,7 @@ namespace InternetMarket
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
             }).AddEntityFrameworkStores<AppDbContext>();
+            
             services.AddDatabase(Configuration);
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();

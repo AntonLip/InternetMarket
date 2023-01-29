@@ -1,4 +1,6 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+RUN apt-get update
+RUN apt-get install -y libfreetype6 libfontconfig1
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443

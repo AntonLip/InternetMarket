@@ -1,10 +1,7 @@
 using System;
-using System.Drawing.Imaging;
 using System.IO;
 using InternetMarket.Interfaces.IService;
-using InternetMarket.Models.DbModels;
 using InternetMarket.Models.ViewModels.Ad;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InternetMarket.Controllers;
@@ -85,7 +82,6 @@ public class AdController : Controller
         {
             Console.WriteLine(e);
             return RedirectToAction("Error", "Home");
-
         }
     }
 }

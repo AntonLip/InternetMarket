@@ -7,4 +7,5 @@ namespace InternetMarket.Interfaces.IService;
 public interface IConnectionParamsService : IServices<ConnectionParams, Guid>
 {
     ConnectionParams AddFromContext(HttpContext context);
+    bool IsBotConnection();
 }

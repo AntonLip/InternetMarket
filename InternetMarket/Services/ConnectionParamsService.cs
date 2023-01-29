@@ -26,5 +26,9 @@ public class ConnectionParamsService : BaseService<ConnectionParams>, IConnectio
         }
         return base.Add(connectionParams);
     }
-    
+
+    public bool IsBotConnection()
+    {
+        throw new NotImplementedException();
+    }
 }

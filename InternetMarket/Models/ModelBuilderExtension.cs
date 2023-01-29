@@ -5,7 +5,7 @@ using System;
 
 namespace InternetMarket.Models
 {
-    public static class ModelBuilderExtension
+    public static class  ModelBuilderExtension
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {

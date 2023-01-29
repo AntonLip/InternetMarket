@@ -24,3 +24,11 @@ services:
             - "80:80"
         depends_on:
             - database
+
+    simple:
+        build:
+            context: ./SimpleBot
+            dockerfile: Dockerfile
+        restart: always
+        depends_on:
+            - webapp

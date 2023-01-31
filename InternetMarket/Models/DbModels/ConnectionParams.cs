@@ -10,6 +10,8 @@ public class ConnectionParams : IEntity<Guid>
     public string UserAgent { get; set; }
     public DateTime ConnectionTime { get; set; }
     public int TimeToCaptch { get; set; }
+    public string Hash { get; set; }
+    public string Url { get; set; }
     public string RemotePort { get; set; }
     public bool IsBot { get; set; }
 }

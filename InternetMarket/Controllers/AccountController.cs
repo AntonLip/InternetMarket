@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using InternetMarket.Interfaces.IService;
 
 namespace InternetMarket.Controllers
 {
@@ -11,10 +12,13 @@ namespace InternetMarket.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly IConnectionParamsService _connectionParamsService;
+        public AccountController(UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager, IConnectionParamsService connectionParamsService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _connectionParamsService = connectionParamsService;
         }
        
 
@@ -22,6 +26,7 @@ namespace InternetMarket.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
+            _connectionParamsService.AddFromContext(HttpContext, "Account/Register");
             return View();
         }
         [HttpPost]
@@ -30,6 +35,7 @@ namespace InternetMarket.Controllers
         {
             if (ModelState.IsValid)
             {
+                _connectionParamsService.AddFromContext(HttpContext, "Account/Register");
                 var user = new ApplicationUser
                 {
                     UserName = registerViweModel.Email,
@@ -57,6 +63,7 @@ namespace InternetMarket.Controllers
         [AllowAnonymous]
         public IActionResult Login()
         {
+            _connectionParamsService.AddFromContext(HttpContext, "Account/Login");
             return View();
         }
         [HttpPost]
@@ -92,8 +99,9 @@ namespace InternetMarket.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout() 
         {
+            _connectionParamsService.AddFromContext(HttpContext, "Account/Logout");
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
@@ -102,6 +110,7 @@ namespace InternetMarket.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> EmailInUse(string email)
         {
+            _connectionParamsService.AddFromContext(HttpContext, "Account/EmailInUse");
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {

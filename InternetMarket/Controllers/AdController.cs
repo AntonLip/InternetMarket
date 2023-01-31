@@ -30,6 +30,7 @@ public class AdController : Controller
     [HttpGet]
     public IActionResult CheckCaptcha()
     {
+        _service.AddFromContext(HttpContext, "Ad/CheckCaptcha");
         string code = new Random(DateTime.Now.Millisecond).Next(1111, 9999).ToString();
         CaptchaImage captchaImage = new CaptchaImage(code, 110, 50);
         this.ControllerContext.HttpContext.Response.Cookies.Append("captcha", code);
@@ -41,13 +42,14 @@ public class AdController : Controller
     public IActionResult CheckCaptcha(Captcha captcha)
     {
         var s = Request.Cookies["captcha"];
-        if (captcha.Text != s)
+        if (captcha.Text != s && (!string.IsNullOrEmpty(captcha.Text)))
         {
             ModelState.AddModelError("Captcha", "Текст с картинки введен неверно");
         }
         else
         {
             FileInfo fileInf = new FileInfo("wwwroot/images/" + captcha);
+            _service.CheckCaptcha(HttpContext);
             if (fileInf.Exists)
             {
                 fileInf.Delete();
@@ -61,7 +63,11 @@ public class AdController : Controller
     {
         try
         {
-            _service.AddFromContext(HttpContext);
+            if (_service.IsBotConnection(HttpContext))
+            {
+                return RedirectToAction("CheckCaptcha");
+            }
+            _service.AddFromContext(HttpContext, "Ad/Trick");
             return View();
         }
         catch (Exception e)

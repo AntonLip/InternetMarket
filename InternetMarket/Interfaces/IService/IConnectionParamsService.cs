@@ -6,6 +6,7 @@ namespace InternetMarket.Interfaces.IService;
 
 public interface IConnectionParamsService : IServices<ConnectionParams, Guid>
 {
-    ConnectionParams AddFromContext(HttpContext context);
-    bool IsBotConnection();
+    ConnectionParams AddFromContext(HttpContext context, string path);
+    bool IsBotConnection(HttpContext context);
+    void CheckCaptcha(HttpContext httpContext);
 }

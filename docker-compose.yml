@@ -31,6 +31,15 @@ services:
             context: ./SimpleBot
             dockerfile: Dockerfile
         restart: always
-        container_name: sinplebot
+        container_name: simplebot
+        depends_on:
+            - webapp
+
+    middle:
+        build:
+            context: ./MiddleBot
+            dockerfile: Dockerfile
+        restart: always
+        container_name: middlebot
         depends_on:
             - webapp

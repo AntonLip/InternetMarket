@@ -91,7 +91,7 @@ namespace InternetMarket.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAECAU6sQcb7tUXFJNTrsbJYpqSjHup+pZWLrsAOSU9Bo2rTWelM8lFrGGgTvgNYRqbw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIq+62Forpu7PKdqJb7HGFO7ILdJO+/HaMkDBpxxxT158K5GIjBQ+IpTapeul/jH4A==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "avebgdfvs",
@@ -109,6 +109,9 @@ namespace InternetMarket.Migrations
                     b.Property<DateTime>("ConnectionTime")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Hash")
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("IsBot")
                         .HasColumnType("tinyint(1)");
 
@@ -120,6 +123,9 @@ namespace InternetMarket.Migrations
 
                     b.Property<int>("TimeToCaptch")
                         .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserAgent")
                         .HasColumnType("longtext");
@@ -179,17 +185,17 @@ namespace InternetMarket.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("60d89ad4-9c9c-4e5f-80f3-d5a4a71cd34e"),
+                            Id = new Guid("439b466f-6156-4665-9388-c9773b3d3e77"),
                             Name = "Бытовая техника"
                         },
                         new
                         {
-                            Id = new Guid("dfaf75dd-a675-44ae-9335-ecabdad8e8a2"),
+                            Id = new Guid("be531799-ca13-4de9-8568-db5e8248e5c7"),
                             Name = "Смартфоны"
                         },
                         new
                         {
-                            Id = new Guid("3254b2d3-2ff9-44cd-998c-70db30442efa"),
+                            Id = new Guid("392cd223-33df-41d6-8bbb-018cf81a5e65"),
                             Name = "Сад и огрод"
                         });
                 });

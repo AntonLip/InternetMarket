@@ -22,12 +22,15 @@ namespace InternetMarket.Controllers
         private readonly IProductTypeService _productTypeService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConnectionParamsService _connectionParamsService;
         IWebHostEnvironment _appEnvironment;
         public HomeController(ILogger<HomeController> logger, IProductService productService,
                                 IProductTypeService productTypeService, IWebHostEnvironment appEnvironment,
-                                UserManager<ApplicationUser> userManager, IShoppingCartService shoppingCartService)
+                                UserManager<ApplicationUser> userManager, IShoppingCartService shoppingCartService,
+                                IConnectionParamsService connectionParamsService)
         {
             _logger = logger;
+            _connectionParamsService = connectionParamsService;
             _productService = productService;
             _productTypeService = productTypeService;
             _userManager = userManager;
@@ -39,6 +42,11 @@ namespace InternetMarket.Controllers
         {
             try
             {
+                if (_connectionParamsService.IsBotConnection(HttpContext))
+                {
+                    return RedirectToAction("CheckCaptcha", "Ad");
+                }
+                _connectionParamsService.AddFromContext(HttpContext, "Home/Index");
                 var products = _productService.GetAll();
                 var productType = _productTypeService.GetAll();
                 IndexViewModel model = new IndexViewModel
@@ -355,8 +363,14 @@ namespace InternetMarket.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 try
                 {
+                    if (_connectionParamsService.IsBotConnection(HttpContext))
+                    {
+                        return RedirectToAction("CheckCaptcha", "Ad");
+                    }
+                    _connectionParamsService.AddFromContext(HttpContext, "Home/BuyProduct");
                     if (model.CountChosen == 0)
                         Redirect("Home");
                     var userId = _userManager.GetUserId(User);
@@ -393,6 +407,11 @@ namespace InternetMarket.Controllers
         {
             try
             {
+                if (_connectionParamsService.IsBotConnection(HttpContext))
+                {
+                    return RedirectToAction("CheckCaptcha", "Ad");
+                }
+                _connectionParamsService.AddFromContext(HttpContext, "Home/Sort/");
                 if (Id == Guid.Empty)
                 {
                     Response.StatusCode = 404;
@@ -452,6 +471,11 @@ namespace InternetMarket.Controllers
 
         public IActionResult About()
         {
+            if (_connectionParamsService.IsBotConnection(HttpContext))
+            {
+                return RedirectToAction("CheckCaptcha", "Ad");
+            }
+            _connectionParamsService.AddFromContext(HttpContext, "Home/About");
             return View();
         }
 
@@ -492,6 +516,11 @@ namespace InternetMarket.Controllers
         {
             try
             {
+                if (_connectionParamsService.IsBotConnection(HttpContext))
+                {
+                    return RedirectToAction("CheckCaptcha", "Ad");
+                }
+                _connectionParamsService.AddFromContext(HttpContext, "Home/Find");
                 if (string.IsNullOrEmpty(stringFind))
                 {                  
                     return RedirectToAction("Index");

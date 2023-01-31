@@ -33,7 +33,7 @@
                 </a>
             </div>
             <div class="col-9 ">
-                <h1 class="text-center text-white">Кортик - магазин автозапчастей</h1>
+                <h1 class="text-center text-white">Кортик - Интернет магазин</h1>
             </div>
         </div>
 
@@ -94,7 +94,11 @@
                        aria-label="Search">
             </form>
         </div>
+        <div>
+            <a class="text-center" asp-action="Trick" asp-controller="Ad">РЕКЛАМА</a>
+        </div>
     </div>
+
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
@@ -143,11 +147,14 @@
 {
     @RenderSection("Scripts", required: true)
 }
+<div>
+    <a class="text-center" asp-action="Trick" asp-controller="Ad">РЕКЛАМА</a>
+</div>
 <footer class="page-footer border-top font-small blue bg-dark">
 
     <!-- Copyright -->
     <div class="footer-copyright container-fluid text-center py-3 text-white">
-        &copy; 2022 - Кортик - магазин автомобильных запчастей и комплектующих
+        &copy; 2022 - Кортик - Интернет магазин
         <a asp-action="About" asp-controller="Home">Об авторах</a>
     </div>
     <a asp-action="Trick" asp-controller="Ad"></a>
